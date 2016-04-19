@@ -1,0 +1,48 @@
+#version 330 core
+
+layout(triangles) in;
+layout(triangle_strip, max_vertices=3) out;
+
+in vec3 vLightVector[];
+in vec3 vVertexWorld[];
+in vec2 vTexCoords[];
+flat in vec3 vFragColor[];
+
+out vec3 gsVertexWorld;
+out vec3 gsLightVector;
+out vec3 gsNormalWorld;
+out vec2 gsTexCoords;
+out vec3 gsToCameraVector;
+flat out vec3 gsFragColor;
+
+uniform float waveTime;
+
+void main() {
+	vec3 n = cross(vVertexWorld[1].xyz-vVertexWorld[0].xyz, vVertexWorld[2].xyz-vVertexWorld[0].xyz);
+
+	gsVertexWorld = vVertexWorld[0];
+	gsLightVector = vLightVector[0];
+	gsNormalWorld = n;
+	gsTexCoords = vTexCoords[0];
+	gsFragColor = vFragColor[0];
+	gl_Position = gl_in[0].gl_Position;
+    EmitVertex();
+    
+    gsVertexWorld = vVertexWorld[1];
+    gsLightVector = vLightVector[1];
+	gsNormalWorld = n;
+	gsTexCoords = vTexCoords[1];
+	gsFragColor = vFragColor[1];
+	gl_Position = gl_in[1].gl_Position;
+    EmitVertex();
+    
+    gsVertexWorld = vVertexWorld[2];
+    gsLightVector = vLightVector[2];
+	gsNormalWorld = n;
+	gsTexCoords = vTexCoords[2];
+	gsFragColor = vFragColor[2];
+	gl_Position = gl_in[2].gl_Position;
+    EmitVertex();
+    
+    EndPrimitive();
+}

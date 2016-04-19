@@ -1,0 +1,43 @@
+#version 330 core
+
+in vec3 gsVertexWorld;
+in vec3 gsNormalWorld;
+in vec3 gsLightVector;
+in vec2 gsTexCoords;
+in vec3 gsToCameraVector;
+flat in vec3 gsFragColor;
+
+out vec4 fragColor;
+
+uniform vec3 lightColor;
+uniform sampler2D texSampler;
+uniform float shineDamper;
+uniform float reflectivity;
+
+void main() {
+	// Normalisation des vecteurs
+	vec3 unitNormalWorld = normalize(gsNormalWorld);
+	vec3 unitLightVector = normalize(gsLightVector);
+	
+	//------------------------------
+	// Calcul de la lumière ambiante
+	//------------------------------
+	
+	// Calcul de l'angle entre la normale et la lumière
+	float theta = dot(unitNormalWorld, unitLightVector);
+	
+	// Calcul de la luminosité du pixel (entre 0 et 1)
+	float brightness = max(theta, 0.3);
+	
+	// Calcul de la lumière diffuse
+	vec3 diffuse = brightness * lightColor;
+	
+	// Calcul de la couleur finale du pixel
+	vec4 color;
+	if (gsFragColor.x == 0 && gsFragColor.y == 0 && gsFragColor.z == 0) {
+		color = texture(texSampler, gsTexCoords);
+	} else {
+		color = vec4(gsFragColor, 1);
+	}
+	fragColor = vec4(diffuse, 1) * color;
+}
