@@ -1,0 +1,60 @@
+#version 330 core
+
+in vec3 gsVertexWorld;
+in vec3 gsNormalWorld;
+in vec3 gsLightVector;
+in vec2 gsTexCoords;
+in vec3 gsToCameraVector;
+
+out vec4 fragColor;
+
+uniform vec3 lightColor;
+uniform sampler2D texSampler;
+uniform float shineDamper;
+uniform float reflectivity;
+
+void main() {
+	// Normalisation des vecteurs
+	vec3 unitNormalWorld = normalize(gsNormalWorld);
+	vec3 unitLightVector = normalize(lightColor);
+	
+	//------------------------------
+	// Calcul de la lumière ambiante
+	//------------------------------
+	
+	// Calcul de l'angle entre la normale et la lumière
+	float theta = dot(unitNormalWorld, unitLightVector);
+	
+	// Calcul de la luminosité du pixel (entre 0 et 1)
+	float brightness = max(theta, 0.3);
+	
+	// Calcul de la lumière diffuse
+	vec3 diffuse = brightness * lightColor;
+	
+	//--------------------------------
+	// Calcul de la lumière spéculaire
+	//--------------------------------
+	
+	// Normalisation du vecteur entre la surface et la camera
+	vec3 unitToCameraVector = normalize(gsToCameraVector);
+	
+	// Inverse du vecteur entre la lumière et la surface
+	vec3 lightDirection = -unitLightVector;
+	
+	// Réfléction
+	vec3 reflectedLightDirection = reflect(lightDirection, unitNormalWorld);
+	
+	// Angle entre la réflection et la camera
+	float specularFactor = dot(reflectedLightDirection, unitToCameraVector);
+	
+	// Epêche que le taux de spécularité soit négatif
+	specularFactor = max(specularFactor, 0.0);
+	
+	// Taux d'absorption du matériau
+	float dampedFactor = pow(specularFactor, shineDamper);
+	
+	vec3 finalSpecular = dampedFactor * lightColor * reflectivity;
+	
+	// Calcul de la couleur finale du pixel
+	fragColor = vec4(diffuse, 1) * texture(texSampler, gsTexCoords) + vec4(finalSpecular, 1);
+}

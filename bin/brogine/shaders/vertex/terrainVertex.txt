@@ -1,0 +1,41 @@
+#version 330 core
+
+in vec3 inVertex;
+in vec2 inTexCoords;
+
+out vec3 vLightVector;
+out vec3 vVertexWorld;
+out vec2 vTexCoords;
+flat out vec3 vFragColor;
+
+uniform mat4 model;
+uniform mat4 projection;
+uniform mat4 view;
+uniform vec3 lightPosition;
+
+void main() {	
+	// Calcul de la postion du sommet dans le repère universel
+	vec4 vertexWorld = model * vec4(inVertex, 1);
+
+	// Position finale du sommet
+	gl_Position = projection * view * vertexWorld;
+	
+	vVertexWorld = vertexWorld.xyz;
+	
+	// Calcul du vecteur entre le sommet et la lumière
+	vLightVector = lightPosition - vertexWorld.xyz;
+	
+	// Envoi des coordonnées de texture
+	vTexCoords = inTexCoords;
+	
+	// Couleur rajout�e selon la hauteur du sommet
+	// Il est jaune au niveau de la mer
+	// Vert au niveau des plaines
+	// Blanc en hauteur
+	vFragColor = vec3(0, 0, 0);
+	if (vertexWorld.y <= 1) {
+		vFragColor = vec3(0.93, 0.86, 0.43);
+	} else if (vertexWorld.y >= 5) {
+		vFragColor = vec3(0.94, 0.94, 1);
+	}
+}

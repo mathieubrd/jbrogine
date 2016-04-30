@@ -2,9 +2,9 @@ package brogine.shaders;
 
 public class WaterShader extends Shader {
 
-	private static final String VERTEX_FILE = "src/brogine/shaders/vertex/waterVertex.txt";
-	private static final String GEOMETRY_FILE = "src/brogine/shaders/geometry/waterGeometry.txt";
-	private static final String FRAGMENT_FILE = "src/brogine/shaders/fragment/waterFragment.txt";
+	private static final String VERTEX_FILE = "/brogine/shaders/vertex/waterVertex.txt";
+	private static final String GEOMETRY_FILE = "/brogine/shaders/geometry/waterGeometry.txt";
+	private static final String FRAGMENT_FILE = "/brogine/shaders/fragment/waterFragment.txt";
 	
 	public WaterShader() {
 		super(VERTEX_FILE, GEOMETRY_FILE, FRAGMENT_FILE);

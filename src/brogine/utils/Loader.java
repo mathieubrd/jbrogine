@@ -63,10 +63,9 @@ public abstract class Loader {
 	}
 	
 	private static Texture loadTexture(String textureFile) {
-		String file = "res/textures/" + textureFile + ".png";
 		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(new File(file)));
+			texture = TextureLoader.getTexture("PNG", Loader.class.getResourceAsStream("/res/textures/" + textureFile + ".png"));
 		} catch (FileNotFoundException e) {
 			System.err.println("Unable to find " + textureFile);
 			e.printStackTrace();

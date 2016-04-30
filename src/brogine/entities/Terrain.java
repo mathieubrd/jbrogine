@@ -1,14 +1,12 @@
 package brogine.entities;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-
-import org.lwjgl.util.vector.Vector3f;
 
 import brogine.Mesh;
 import brogine.Scene;
@@ -32,9 +30,10 @@ public class Terrain {
 	}
 	
 	public Mesh generateTerrain(String heightMap) {
+		InputStream stream = this.getClass().getResourceAsStream("/res/" + heightMap + ".png");
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("res/" + heightMap + ".png"));
+			image = ImageIO.read(stream);
 		} catch (IOException e) {
 			System.err.println("Unable to read " + heightMap);
 			e.printStackTrace();

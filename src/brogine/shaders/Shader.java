@@ -3,6 +3,8 @@ package brogine.shaders;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,10 +92,11 @@ public abstract class Shader {
 		GL20.glDeleteProgram(programID);
 	}
 	
-	private static int loadShader(String file, int type) {
+	private int loadShader(String file, int type) {
+		InputStream stream = this.getClass().getResourceAsStream(file);
 		StringBuilder shaderSource = new StringBuilder();
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				shaderSource.append(line).append("\n");

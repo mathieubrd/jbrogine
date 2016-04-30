@@ -1,0 +1,33 @@
+#version 330 core
+
+in vec3 inVertex;
+in vec2 inTexCoords;
+
+out vec3 vLightVector;
+out vec3 vVertexWorld;
+out vec2 vTexCoords;
+out vec3 vToCameraVector;
+
+uniform mat4 model;
+uniform mat4 projection;
+uniform mat4 view;
+uniform vec3 lightPosition;
+
+void main() {
+	// Calcul de la postion du sommet dans le repère universel
+	vec4 vertexWorld = model * vec4(inVertex, 1);
+
+	// Position finale du sommet
+	gl_Position = projection * view * vertexWorld;
+	
+	// Calcul du vecteur entre le sommet et la lumière
+	vLightVector = lightPosition - vertexWorld.xyz;
+	
+	vVertexWorld = vertexWorld.xyz;
+	
+	// Calcul du vecteur entre le sommet et la camera
+	vToCameraVector = (inverse(view) * vec4(0.0, 0.0, 0.0, 1)).xyz - vertexWorld.xyz;
+	
+	// Envoi des coordonnées de texture
+	vTexCoords = inTexCoords;
+}
